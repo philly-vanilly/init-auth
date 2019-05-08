@@ -16,6 +16,7 @@ const configAuthZero: AuthConfig = {
   // the audience parameter needs to match an existing API service identifier configured in the APIs section of your Dashboard
   customQueryParams: { audience: 'https://philly-vanilly.auth0.com/api/v2/' },
   redirectUri: `${window.location.origin}${environment.production ? '/init-auth' : ''}/index.html`,
+  silentRefreshRedirectUri: `${window.location.origin}${environment.production ? '/init-auth' : ''}/silent-refresh.html`,
   clientId: 'r4gL1ntxR2lnodnu81WFnWNOWdO5SFuV',
   scope: 'openid profile email',
 };
