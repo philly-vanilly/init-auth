@@ -13,6 +13,7 @@ const config: AuthConfig = {
   redirectUri: `${window.location.origin}${environment.production ? '/init-auth' : ''}/index.html`,
   clientId: 'r4gL1ntxR2lnodnu81WFnWNOWdO5SFuV',
   scope: 'openid profile email',
+  // for keycloak instead of auth0:
   silentRefreshRedirectUri: `${window.location.origin}${environment.production ? '/init-auth' : ''}/silent-refresh.html`,
 };
 

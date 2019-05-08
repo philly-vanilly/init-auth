@@ -14,7 +14,9 @@ import {OAuthService} from 'angular-oauth2-oidc';
     <div style="margin-top: 30px;">
       <div>Expires at {{ accessTokenExpiration }}</div>
       <button (click)="onLogoutClick()">Logout</button>
-      <button (click)="onSilentRefreshClick()">Silent Refresh</button>
+    </div>
+    <div>
+      <button (click)="onSilentRefreshClick()">Silent Refresh</button> (only Keycloak)
     </div>
     <div style="margin-top: 30px;">
       <router-outlet></router-outlet>
