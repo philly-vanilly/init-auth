@@ -8,7 +8,7 @@ import {RouterModule} from '@angular/router';
 import {InitialAuthService} from './initial-auth.service';
 
 export const authConfig: AuthConfig = {
-  issuer: 'https://philly-vanilly.auth0.com',
+  issuer: 'https://philly-vanilly.auth0.com/',
   redirectUri: window.location.origin + '/index.html',
   clientId: 'r4gL1ntxR2lnodnu81WFnWNOWdO5SFuV',
   scope: 'openid profile email',
