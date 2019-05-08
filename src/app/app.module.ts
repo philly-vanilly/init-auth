@@ -11,7 +11,7 @@ const config: AuthConfig = {
   issuer: 'https://philly-vanilly.auth0.com/',
   redirectUri: window.location.origin + '/index.html',
   clientId: 'r4gL1ntxR2lnodnu81WFnWNOWdO5SFuV',
-  customQueryParams: { audience: 'https://pariokwa.github.stackblitz.io' },
+  customQueryParams: { audience: 'https://jvmiylwa.github.stackblitz.io/index.html' },
   scope: 'openid profile email',
   silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
 };
