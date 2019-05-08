@@ -12,10 +12,12 @@ import {HasValidTokenGuard} from './has-valid-token-guard.service';
 
 const configAuthZero: AuthConfig = {
   issuer: 'https://philly-vanilly.auth0.com/',
-  customQueryParams: { audience: 'https://philly-vanilly.github.io' }, // auth0 uses this for token refreshing
+  // this is for the refresh token; https://community.auth0.com/t/how-to-troubleshoot-access-denied-due-to-service-not-found-error/6822/2
+  // the audience parameter needs to match an existing API service identifier configured in the APIs section of your Dashboard
+  customQueryParams: { audience: 'https://philly-vanilly.auth0.com/api/v2/' },
   redirectUri: `${window.location.origin}${environment.production ? '/init-auth' : ''}/index.html`,
   clientId: 'r4gL1ntxR2lnodnu81WFnWNOWdO5SFuV',
-  scope: 'openid profile email offline_access',
+  scope: 'openid profile email',
 };
 
 // works only on localhost, redirect to custom github page is not allowed
