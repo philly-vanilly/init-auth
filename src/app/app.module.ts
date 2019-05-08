@@ -6,13 +6,14 @@ import {AuthConfig, OAuthModule} from 'angular-oauth2-oidc';
 import {HttpClientModule} from '@angular/common/http';
 import {RouterModule} from '@angular/router';
 import {InitialAuthService} from './initial-auth.service';
+import {environment} from '../environments/environment';
 
 const config: AuthConfig = {
   issuer: 'https://philly-vanilly.auth0.com/',
-  redirectUri: window.location.origin + '/index.html',
+  redirectUri: `${window.location.origin}${environment.production ? '/init-auth' : ''}/index.html'`,
   clientId: 'r4gL1ntxR2lnodnu81WFnWNOWdO5SFuV',
   scope: 'openid profile email',
-  silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
+  silentRefreshRedirectUri: `${window.location.origin}${environment.production ? '/init-auth' : ''}/silent-refresh.html'`,
 };
 
 config.logoutUrl = `${config.issuer}v2/logout?client_id=${config.clientId}&returnTo=${encodeURIComponent(config.redirectUri)}`;
