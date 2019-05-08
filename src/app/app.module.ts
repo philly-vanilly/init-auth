@@ -8,10 +8,10 @@ import {RouterModule} from '@angular/router';
 import {InitialAuthService} from './initial-auth.service';
 
 export const authConfig: AuthConfig = {
-  issuer: 'https://steyer-identity-server.azurewebsites.net/identity',
+  issuer: 'https://philly-vanilly.auth0.com',
   redirectUri: window.location.origin + '/index.html',
-  clientId: 'spa-demo',
-  scope: 'openid profile email voucher',
+  clientId: 'r4gL1ntxR2lnodnu81WFnWNOWdO5SFuV',
+  scope: 'openid profile email',
   silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
 };
 
