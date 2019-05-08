@@ -1,0 +1,22 @@
+language: node_js
+node_js:
+  - "10"
+dist: trusty
+sudo: required
+branches:
+  only:
+    - master
+before_script:
+  - npm install -g @angular/cli
+script:
+  - npm run lint
+  - npm run test
+  - ng e2e
+  - ng run build --prod --base-href https://philly-vanilly.github.io/init-auth/
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: dist/init-auth
+  on:
+    branch: master
