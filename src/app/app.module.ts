@@ -10,10 +10,10 @@ import {environment} from '../environments/environment';
 
 const config: AuthConfig = {
   issuer: 'https://philly-vanilly.auth0.com/',
-  redirectUri: `${window.location.origin}${environment.production ? '/init-auth' : ''}/index.html'`,
+  redirectUri: `${window.location.origin}${environment.production ? '/init-auth' : ''}/index.html`,
   clientId: 'r4gL1ntxR2lnodnu81WFnWNOWdO5SFuV',
   scope: 'openid profile email',
-  silentRefreshRedirectUri: `${window.location.origin}${environment.production ? '/init-auth' : ''}/silent-refresh.html'`,
+  silentRefreshRedirectUri: `${window.location.origin}${environment.production ? '/init-auth' : ''}/silent-refresh.html`,
 };
 
 config.logoutUrl = `${config.issuer}v2/logout?client_id=${config.clientId}&returnTo=${encodeURIComponent(config.redirectUri)}`;
