@@ -1,5 +1,5 @@
 import {Injectable, Injector} from '@angular/core';
-import {AuthConfig, NullValidationHandler, OAuthService} from 'angular-oauth2-oidc';
+import {AuthConfig, JwksValidationHandler, OAuthService} from 'angular-oauth2-oidc';
 import {Router} from '@angular/router';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class InitialAuthService {
     return new Promise((resolveFn, rejectFn) => {
       this.oauthService.configure(this.authConfig);
       this.oauthService.setStorage(localStorage);
-      this.oauthService.tokenValidationHandler = new NullValidationHandler();
+      this.oauthService.tokenValidationHandler = new JwksValidationHandler();
       this.oauthService.loadDiscoveryDocumentAndTryLogin().then(res => {
         if (res) { // login success
           this.oauthService.setupAutomaticSilentRefresh();

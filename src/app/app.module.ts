@@ -7,13 +7,17 @@ import {HttpClientModule} from '@angular/common/http';
 import {RouterModule} from '@angular/router';
 import {InitialAuthService} from './initial-auth.service';
 
-export const authConfig: AuthConfig = {
+const config: AuthConfig = {
   issuer: 'https://philly-vanilly.auth0.com/',
   redirectUri: window.location.origin + '/index.html',
   clientId: 'r4gL1ntxR2lnodnu81WFnWNOWdO5SFuV',
+  customQueryParams: { audience: 'https://pariokwa.github.stackblitz.io' },
   scope: 'openid profile email',
   silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
 };
+
+config.logoutUrl = `${config.issuer}v2/logout?client_id=${config.clientId}&returnTo=${encodeURIComponent(config.redirectUri)}`;
+
 
 // see https://www.intertech.com/Blog/angular-4-tutorial-run-code-during-app-initialization/
 const handleInitialAuth = (initialAuthService: InitialAuthService) => {
@@ -37,7 +41,7 @@ const handleInitialAuth = (initialAuthService: InitialAuthService) => {
   ],
   providers: [
     InitialAuthService,
-    { provide: AuthConfig, useValue: authConfig },
+    { provide: AuthConfig, useValue: config },
     {
       provide: APP_INITIALIZER,
       useFactory: handleInitialAuth,
