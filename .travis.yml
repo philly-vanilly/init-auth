@@ -9,9 +9,6 @@ branches:
 before_script:
   - npm install -g @angular/cli
 script:
-  - npm run lint
-  - npm run test
-  - ng e2e
   - ng run build --prod --base-href https://philly-vanilly.github.io/init-auth/
 deploy:
   provider: pages
