@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {SecComponent} from './sec.component';
+import {LazyComponent} from './lazy.component';
 import {RouterModule} from '@angular/router';
 
 @NgModule({
-  declarations: [SecComponent],
+  declarations: [LazyComponent],
   imports: [
     CommonModule,
     RouterModule.forChild([
       {
         path: '',
-        component: SecComponent
+        component: LazyComponent
       },
       {
         path: '**',
@@ -20,4 +20,4 @@ import {RouterModule} from '@angular/router';
     ])
   ]
 })
-export class SecModule { }
+export class LazyModule { }
