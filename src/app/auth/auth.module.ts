@@ -2,7 +2,6 @@ import {APP_INITIALIZER, NgModule} from '@angular/core';
 import {AuthConfig, OAuthModule} from 'angular-oauth2-oidc';
 import {InitialAuthService} from './initial-auth.service';
 import {environment} from '../../environments/environment';
-import {LAZY_PATH} from '../app-routing.module';
 
 const configAuthZero: AuthConfig = {
   issuer: 'https://philly-vanilly.auth0.com/',
