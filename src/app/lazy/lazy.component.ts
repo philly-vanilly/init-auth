@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {JwtHelperService} from '@auth0/angular-jwt';
+import {InitialAuthService} from '../auth/initial-auth.service';
 
 @Component({
   selector: 'app-lazy',
@@ -22,16 +23,13 @@ import {JwtHelperService} from '@auth0/angular-jwt';
   `
 })
 export class LazyComponent {
-  private jwtHelper: JwtHelperService;
 
   get accessToken(): string {
-    const token = this.oauthService.getAccessToken();
-    return token ? this.jwtHelper.decodeToken(token) : '';
+    return this.initalAuthService.decodedAccessToken;
   }
 
   get idToken(): string {
-    const token = this.oauthService.getIdToken();
-    return token ? this.jwtHelper.decodeToken(token) : '';
+    return this.initalAuthService.decodedIDToken;
   }
 
   get accessTokenExpiration(): string {
@@ -43,10 +41,9 @@ export class LazyComponent {
   }
 
   constructor(
-    private oauthService: OAuthService
-  ) {
-    this.jwtHelper = new JwtHelperService();
-  }
+    private oauthService: OAuthService,
+    private initalAuthService: InitialAuthService
+  ) {}
 
   onLogoutClick() {
     this.oauthService.logOut();
