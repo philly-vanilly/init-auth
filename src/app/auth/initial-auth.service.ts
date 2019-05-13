@@ -1,11 +1,14 @@
 import {Injectable} from '@angular/core';
 import {AuthConfig, JwksValidationHandler, OAuthService} from 'angular-oauth2-oidc';
 import {JwtHelperService} from '@auth0/angular-jwt';
+import {filter} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InitialAuthService {
+  private jwtHelper: JwtHelperService = new JwtHelperService();
+
   // tslint:disable-next-line:variable-name
   private _decodedAccessToken: any;
   get decodedAccessToken() { return this._decodedAccessToken; }
@@ -26,12 +29,10 @@ export class InitialAuthService {
       this.oauthService.configure(this.authConfig);
       this.oauthService.setStorage(localStorage);
       this.oauthService.tokenValidationHandler = new JwksValidationHandler();
+      this.initTokenReceivedHandler();
       this.oauthService.loadDiscoveryDocumentAndTryLogin().then(isLoggedIn => {
         if (isLoggedIn) {
           this.oauthService.setupAutomaticSilentRefresh();
-          const jwtHelper: JwtHelperService = new JwtHelperService();
-          this._decodedAccessToken = jwtHelper.decodeToken(this.oauthService.getAccessToken());
-          this._decodedIDToken = jwtHelper.decodeToken(this.oauthService.getIdToken());
           resolveFn();
           // if you don't use clearHashAfterLogin from angular-oauth2-oidc you can remove the #hash or route to some other URL manually:
           // const lazyPath = this.injector.get(LAZY_PATH) as string;
@@ -43,5 +44,16 @@ export class InitialAuthService {
         }
       });
     });
+  }
+
+  private handleNewToken() {
+    this._decodedAccessToken = this.jwtHelper.decodeToken(this.oauthService.getAccessToken());
+    this._decodedIDToken = this.jwtHelper.decodeToken(this.oauthService.getIdToken());
+  }
+
+  private initTokenReceivedHandler() {
+    this.oauthService.events
+      .pipe(filter((e: any) => e.type === 'token_received'))
+      .subscribe(() => this.handleNewToken());
   }
 }
