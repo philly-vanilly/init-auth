@@ -9,12 +9,9 @@ import {filter} from 'rxjs/operators';
 export class InitialAuthService {
   private jwtHelper: JwtHelperService = new JwtHelperService();
 
-  // tslint:disable-next-line:variable-name
   private _decodedAccessToken: any;
-  get decodedAccessToken() { return this._decodedAccessToken; }
-
-  // tslint:disable-next-line:variable-name
   private _decodedIDToken: any;
+  get decodedAccessToken() { return this._decodedAccessToken; }
   get decodedIDToken() { return this._decodedIDToken; }
 
   constructor(
@@ -26,10 +23,17 @@ export class InitialAuthService {
 
   async initAuth(): Promise<any> {
     return new Promise((resolveFn, rejectFn) => {
+      // setup oauthService
       this.oauthService.configure(this.authConfig);
       this.oauthService.setStorage(localStorage);
       this.oauthService.tokenValidationHandler = new JwksValidationHandler();
-      this.initTokenReceivedHandler();
+
+      // subscribe to token events
+      this.oauthService.events
+        .pipe(filter((e: any) => e.type === 'token_received'))
+        .subscribe(() => this.handleNewToken());
+
+      // continue initializing app (provoking a token_received event) or redirect to login-page
       this.oauthService.loadDiscoveryDocumentAndTryLogin().then(isLoggedIn => {
         if (isLoggedIn) {
           this.oauthService.setupAutomaticSilentRefresh();
@@ -49,11 +53,5 @@ export class InitialAuthService {
   private handleNewToken() {
     this._decodedAccessToken = this.jwtHelper.decodeToken(this.oauthService.getAccessToken());
     this._decodedIDToken = this.jwtHelper.decodeToken(this.oauthService.getIdToken());
-  }
-
-  private initTokenReceivedHandler() {
-    this.oauthService.events
-      .pipe(filter((e: any) => e.type === 'token_received'))
-      .subscribe(() => this.handleNewToken());
   }
 }
