@@ -17,12 +17,11 @@ const configIdentityServer4Localhost: AuthConfig = {
 
 export function createAuthZeroConfig(injector: Injector): AuthConfig {
   // using injector because you can't use window/document/location in AOT
-  const href = injector.get(DOCUMENT).location.href;
   const origin = injector.get(DOCUMENT).location.origin;
   const configAuthZero: AuthConfig = {
     issuer: 'https://philly-vanilly.auth0.com/',
     customQueryParams: { audience: 'https://philly-vanilly.auth0.com/api/v2/' },
-    redirectUri: href, // redirecting to exact pre-login uri enables bookmarking and page-reloading
+    redirectUri: origin,
     silentRefreshRedirectUri: `${origin}/silent-refresh.html`,
     clientId: 'r4gL1ntxR2lnodnu81WFnWNOWdO5SFuV',
     scope: 'openid profile email',
@@ -49,7 +48,6 @@ export class InitialAuthService {
 
   constructor(
     private oauthService: OAuthService,
-    // needed to get Router, Injection tokens etc before app initialization (and DOCUMENT when using AOT)
     private injector: Injector
   ) {}
 
