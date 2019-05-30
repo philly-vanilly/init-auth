@@ -21,7 +21,7 @@ export function createAuthZeroConfig(injector: Injector): AuthConfig {
   const configAuthZero: AuthConfig = {
     issuer: 'https://philly-vanilly.auth0.com/',
     customQueryParams: { audience: 'https://philly-vanilly.auth0.com/api/v2/' },
-    redirectUri: origin,
+    redirectUri: `${origin}/index.html`,
     silentRefreshRedirectUri: `${origin}/silent-refresh.html`,
     clientId: 'r4gL1ntxR2lnodnu81WFnWNOWdO5SFuV',
     scope: 'openid profile email',
