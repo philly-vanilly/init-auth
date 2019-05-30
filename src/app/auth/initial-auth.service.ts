@@ -2,7 +2,7 @@ import {Injectable, Injector} from '@angular/core';
 import {AuthConfig, JwksValidationHandler, OAuthService} from 'angular-oauth2-oidc';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {filter} from 'rxjs/operators';
-import {APP_BASE_HREF, DOCUMENT} from '@angular/common';
+import {DOCUMENT} from '@angular/common';
 
 // works only on localhost, redirect to custom github page is not allowed. username/password = max/geheim
 const configIdentityServer4Localhost: AuthConfig = {
@@ -16,14 +16,14 @@ const configIdentityServer4Localhost: AuthConfig = {
 };
 
 export function createAuthZeroConfig(injector: Injector): AuthConfig {
+  // using injector because you can't use window/document/location in AOT
   const href = injector.get(DOCUMENT).location.href;
   const origin = injector.get(DOCUMENT).location.origin;
-  const appBaseHref = injector.get(APP_BASE_HREF);
   const configAuthZero: AuthConfig = {
     issuer: 'https://philly-vanilly.auth0.com/',
     customQueryParams: { audience: 'https://philly-vanilly.auth0.com/api/v2/' },
-    redirectUri: href,
-    silentRefreshRedirectUri: `${origin + appBaseHref}/silent-refresh.html`,
+    redirectUri: href, // redirecting to exact pre-login uri enables bookmarking and page-reloading
+    silentRefreshRedirectUri: `${origin}/silent-refresh.html`,
     clientId: 'r4gL1ntxR2lnodnu81WFnWNOWdO5SFuV',
     scope: 'openid profile email',
     clearHashAfterLogin: true,
