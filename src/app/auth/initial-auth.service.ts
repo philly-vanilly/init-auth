@@ -1,7 +1,38 @@
-import {Injectable} from '@angular/core';
+import {Injectable, Injector} from '@angular/core';
 import {AuthConfig, JwksValidationHandler, OAuthService} from 'angular-oauth2-oidc';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {filter} from 'rxjs/operators';
+import {APP_BASE_HREF, DOCUMENT} from '@angular/common';
+
+// works only on localhost, redirect to custom github page is not allowed. username/password = max/geheim
+const configIdentityServer4Localhost: AuthConfig = {
+  issuer: 'https://steyer-identity-server.azurewebsites.net/identity',
+  redirectUri: window.location.origin + '/index.html',
+  clientId: 'spa-demo',
+  scope: 'openid profile email voucher',
+  silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
+  clearHashAfterLogin: true,
+  showDebugInformation: true
+};
+
+export function createAuthZeroConfig(injector: Injector): AuthConfig {
+  const href = injector.get(DOCUMENT).location.href;
+  const origin = injector.get(DOCUMENT).location.origin;
+  const appBaseHref = injector.get(APP_BASE_HREF);
+  const configAuthZero: AuthConfig = {
+    issuer: 'https://philly-vanilly.auth0.com/',
+    customQueryParams: { audience: 'https://philly-vanilly.auth0.com/api/v2/' },
+    redirectUri: href,
+    silentRefreshRedirectUri: `${origin + appBaseHref}/silent-refresh.html`,
+    clientId: 'r4gL1ntxR2lnodnu81WFnWNOWdO5SFuV',
+    scope: 'openid profile email',
+    clearHashAfterLogin: true,
+    showDebugInformation: true
+  };
+  configAuthZero.logoutUrl =
+    `${configAuthZero.issuer}v2/logout?client_id=${configAuthZero.clientId}&returnTo=${encodeURIComponent(configAuthZero.redirectUri)}`;
+  return configAuthZero;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -9,22 +40,23 @@ import {filter} from 'rxjs/operators';
 export class InitialAuthService {
   private jwtHelper: JwtHelperService = new JwtHelperService();
 
+  // tslint:disable-next-line:variable-name
   private _decodedAccessToken: any;
+  // tslint:disable-next-line:variable-name
   private _decodedIDToken: any;
   get decodedAccessToken() { return this._decodedAccessToken; }
   get decodedIDToken() { return this._decodedIDToken; }
 
   constructor(
-    private authConfig: AuthConfig,
     private oauthService: OAuthService,
-    // needed to get Router and Injection tokens before app initialization: https://github.com/robisim74/angular-l10n/issues/176
-    // private injector: Injector
+    // needed to get Router, Injection tokens etc before app initialization (and DOCUMENT when using AOT)
+    private injector: Injector
   ) {}
 
   async initAuth(): Promise<any> {
     return new Promise((resolveFn, rejectFn) => {
       // setup oauthService
-      this.oauthService.configure(this.authConfig);
+      this.oauthService.configure(createAuthZeroConfig(this.injector));
       this.oauthService.setStorage(localStorage);
       this.oauthService.tokenValidationHandler = new JwksValidationHandler();
 
