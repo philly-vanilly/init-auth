@@ -1,11 +1,40 @@
 import {APP_INITIALIZER, NgModule} from '@angular/core';
-import {OAuthModule} from 'angular-oauth2-oidc';
+import {AuthConfig, OAuthModule} from 'angular-oauth2-oidc';
 import {InitialAuthService} from './initial-auth.service';
+import {environment} from '../../environments/environment';
+
+// sometimes you can't use window/document/location in AOT
+const origin = environment.production ? 'https://philly-vanilly.github.io/init-auth' : 'http://localhost:4200';
+const configAuthZero: AuthConfig = {
+  issuer: 'https://philly-vanilly.auth0.com/',
+  customQueryParams: { audience: 'https://philly-vanilly.auth0.com/api/v2/' },
+  redirectUri: `${origin}/index.html`,
+  silentRefreshRedirectUri: `${origin}/silent-refresh.html`,
+  clientId: 'r4gL1ntxR2lnodnu81WFnWNOWdO5SFuV',
+  scope: 'openid profile email',
+  clearHashAfterLogin: true,
+  showDebugInformation: true
+};
+configAuthZero.logoutUrl =
+  `${configAuthZero.issuer}v2/logout?client_id=${configAuthZero.clientId}&returnTo=${encodeURIComponent(configAuthZero.redirectUri)}`;
+
+
+// works only on localhost, redirect to custom github page is not allowed
+const configKeycloak: AuthConfig = {
+  issuer: 'https://steyer-identity-server.azurewebsites.net/identity',
+  redirectUri: window.location.origin + '/index.html',
+  clientId: 'spa-demo',
+  scope: 'openid profile email voucher',
+  silentRefreshRedirectUri: window.location.origin + '/silent-refresh.html',
+  clearHashAfterLogin: true,
+  showDebugInformation: true
+};
 
 @NgModule({
   imports: [OAuthModule.forRoot()],
   providers: [
     InitialAuthService,
+    { provide: AuthConfig, useValue: configAuthZero },
     {
       provide: APP_INITIALIZER,
       useFactory: (initialAuthService: InitialAuthService) => () => initialAuthService.initAuth(),
