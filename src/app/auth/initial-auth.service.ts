@@ -1,4 +1,4 @@
-import {Injectable, Injector} from '@angular/core';
+import {Injectable, Injector, isDevMode} from '@angular/core';
 import {AuthConfig, JwksValidationHandler, OAuthService} from 'angular-oauth2-oidc';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {filter} from 'rxjs/operators';
@@ -17,11 +17,12 @@ const configIdentityServer4Localhost: AuthConfig = {
 
 export function createAuthZeroConfig(injector: Injector): AuthConfig {
   // using injector because you can't use window/document/location in AOT
+  const href = injector.get(DOCUMENT).location.href;
   const origin = injector.get(DOCUMENT).location.origin;
   const configAuthZero: AuthConfig = {
     issuer: 'https://philly-vanilly.auth0.com/',
     customQueryParams: { audience: 'https://philly-vanilly.auth0.com/api/v2/' },
-    redirectUri: `${origin}/index.html`,
+    redirectUri: origin + (isDevMode() ? '' : '/init-auth') + '/index.html',
     silentRefreshRedirectUri: `${origin}/silent-refresh.html`,
     clientId: 'r4gL1ntxR2lnodnu81WFnWNOWdO5SFuV',
     scope: 'openid profile email',
